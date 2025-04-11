@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruhsat Kayıtları</title>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-bold mb-6 text-center">Ruhsat Kayıtları</h1>
+    <div id="records" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+
+  <script>
+    const sheetCSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTKPEZqEzhZw2URR7WHEoYiQwnPBQk7JpT7JvDJVaqg8SpmREPMxWmLnt_2FzZ1rgiUyXnGgYZ0-AHb/pub?output=csv';
+
+    Papa.parse(sheetCSV, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const data = results.data;
+        const container = document.getElementById('records');
+
+        data.forEach((item, index) => {
+          const card = document.createElement('div');
+          card.className = 'bg-white shadow-lg rounded-2xl p-4';
+          card.innerHTML = `
+            <h2 class="text-xl font-semibold mb-2">${item['İsim']}</h2>
+            <p class="text-sm flex items-center mb-1"><i data-lucide="calendar"></i><span class="ml-2">Tarih: ${item['Tarih']}</span></p>
+            <p class="text-sm flex items-center mb-1"><i data-lucide="badge-check"></i><span class="ml-2">Ruhsat No: ${item['Ruhsat No']}</span></p>
+            <p class="text-sm flex items-center mb-1"><i data-lucide="calendar-clock"></i><span class="ml-2">Ruhsat Tarihi: ${item['Ruhsat Tarihi']}</span></p>
+            <img src="${item['Ruhsat Görseli']}" alt="Ruhsat Görseli" class="w-full mt-4 rounded-lg border">
+          `;
+          container.appendChild(card);
+        });
+        lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>
